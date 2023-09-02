@@ -4,7 +4,7 @@ import gradio as gr
 import sys
 import os
 
-os.environ["OPENAI_API_KEY"] = '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'
+os.environ["OPENAI_API_KEY"] = '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'
 
 def construct_index(directory_path):
     max_input_size = 4096
@@ -24,14 +24,30 @@ def construct_index(directory_path):
 
     return index
 
-def chatbot(input_text):
+def chatbot(input_text, uploaded_file=None):
+    if uploaded_file:
+        # Ensure the "docs" directory exists
+        if not os.path.exists("docs"):
+            os.makedirs("docs")
+        
+        # Get the filename of the uploaded file
+        filename = os.path.join("docs", uploaded_file.name)
+
+        # Save the uploaded PDF file to the "docs" directory
+        with open(filename, "wb") as f:
+            f.write(uploaded_file.read())
+
+
+
     index = GPTSimpleVectorIndex.load_from_disk('index.json')
     response = index.query(input_text, response_mode="compact")
     return response.response
 
-
 iface = gr.Interface(fn=chatbot,
-                     inputs=gr.inputs.Textbox(lines=7, label="Enter your text"),
+                     inputs=[
+                         gr.components.Textbox(lines=7, label="Enter your text"),
+                         gr.inputs.File(label="Upload PDF", type="file")
+                     ],
                      outputs="text",
                      title="Custom-trained AI Chatbot")
 
