@@ -48,8 +48,10 @@ iface = gr.Interface(fn=chatbot,
                          gr.components.Textbox(lines=7, label="Enter your text"),
                          gr.inputs.File(label="Upload PDF", type="file")
                      ],
-                     outputs="text",
-                     title="Custom-trained AI Chatbot")
+                     outputs=["text",],
+                     title="Custom-trained AI Chatbot",
+                     allow_flagging=False,
+                     theme="peach")
 
 index = construct_index("docs")
-iface.launch(share=True)
+iface.launch(share=True, auth = ('user', 'password'), auth_message="Please log in")
