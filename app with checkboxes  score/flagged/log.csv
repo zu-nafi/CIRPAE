@@ -1,0 +1,16 @@
+Enter your text,Select Predetermined Word Sets,output,flag,username,timestamp
+my password has been compromised. in dot point form can you please tell me what to do,['Account / Password'],"Chatbot Response:
+
+- Change your password immediately
+- Make sure the new password is strong and secure
+- Consider using two-factor authentication (2FA) for additional security
+- Notify your IT department or security team
+- Monitor your accounts for suspicious activity
+- Consider using a password manager to store your passwords securely
+
+Predetermined Words Status:
+❌ reset
+❌ review
+✅ suspicious
+
+Percentage Found: 33.33%",,,2023-09-21 10:21:08.263744
