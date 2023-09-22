@@ -34,9 +34,13 @@ def construct_index(directory_path):
 
 #Creating a dictionary with predefined categories, these will be used to test the chatbot's output accuracy
 predetermined_word_sets = {
-    "Account / Password": ["reset", "review", "suspicious"],
-    "Network": ["connection", "firewall", "monitoring", "network", "active directory"],
-    "Physical": ["cat", "property", "fish"]
+    "DOS & DDOS": ["review", "security", "analyse", "mitigate", "report"],
+    "Phishing": ["email", "identify", "malware", "clickbait", "URL", "SOC"],
+    "Ransonware": ["encrypt", "ransom", "data", "threat", "decryption"],
+    "Malware": ["virus", "worm", "trojan horse", "spyware", "adware", "rootkit", "keylogger", "antivirus", "clean"],
+    "Data breach": ["sensitive", "data", "leak", "sanitization", "privacy", "loss prevention", "insurance", "two-factor authentication",],
+    "ICS compromise": ["firewall", "insider", "threat", "management", "honeypot", "physical", "security", "network", "monitoring", "backup", "recovery"]
+
 }
 
 ####################################################################################
@@ -55,9 +59,9 @@ def chatbot(input_text, selected_word_sets):
     found_words = []
     for word in predetermined_words:
         if word.lower() in response.response.lower():
-            found_words.append(f"✅ {word}")
+            found_words.append(f"{word} ✅")
         else:
-            found_words.append(f"❌ {word}")
+            found_words.append(f"{word} ❌")
     
     # Calculate the percentage / score of predetermined words found
     num_predetermined_words = len(predetermined_words)
@@ -68,9 +72,12 @@ def chatbot(input_text, selected_word_sets):
     word_list = "\n".join(found_words)
     
     # Combine the chatbot response, the predetermined word list, and the responses score
-    combined_response = f"Chatbot Response:\n{response.response}\n\nPredetermined Words Status:\n{word_list}\n\nPercentage Found: {percentage_found:.2f}%"
+    chatbot_response = response.response
+    predetermined_word_status = word_list
+    percentage_found_text = f"Percentage Found: {percentage_found:.2f}%"
     
-    return combined_response
+    return chatbot_response, predetermined_word_status, percentage_found_text
+
 
 ####################################################################################
 
@@ -86,9 +93,14 @@ interface1 = gr.Interface(
             default=[list(predetermined_word_sets.keys())[0]],  # Set the default value / selected checkbox
         ),
     ],
-    outputs="text",
+    outputs=[
+        gr.outputs.Textbox(label="Chatbot Response"),
+        gr.outputs.Textbox(label="Scenario Analysis"),
+        gr.outputs.Textbox(label="Score (%)"),
+    ],
     title="Custom-trained AI Chatbot",
 )
+
 
 ####################################################################################
 
