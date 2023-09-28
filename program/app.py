@@ -7,7 +7,7 @@ import os
 ####################################################################################
 
 #Insert OpenAI API key found on website
-os.environ["OPENAI_API_KEY"] = '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'
+os.environ["OPENAI_API_KEY"] = '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'
 
 ####################################################################################
 
@@ -107,5 +107,4 @@ interface1 = gr.Interface(
 interface = gr.TabbedInterface([interface1], ["User interface", "Checkbox"])
 
 index = construct_index("docs")
-interface.launch(share=True)
-iface.launch(share=True, auth = ('user', 'password'), auth_message="Please log in")
+interface.launch(share=True, auth = ('user', 'password'), auth_message="Please log in")
