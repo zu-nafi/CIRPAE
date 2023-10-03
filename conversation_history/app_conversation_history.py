@@ -76,6 +76,20 @@ predetermined_word_sets = {
 
 ####################################################################################
 
+
+# Function to modify the chatbot's response to be outputted in dot points
+def modified_chatbot_response(chatbot_response):
+    # Split the response into sentences
+    sentences = chatbot_response.split('.')
+    
+    # Filter out empty strings and strip whitespace
+    sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
+    
+    # Prefix each sentence with a dot point
+    dot_point_response = "\n".join([f"• {sentence}" for sentence in sentences])
+    
+    return dot_point_response
+
 # Create a chat history to store the conversation
 chat_history = []
 
@@ -114,7 +128,7 @@ def chatbot(input_text, selected_word_set):
     word_list = "\n".join([f"{word} {'✅' if word in identified_words else '❌'}" for word in predetermined_words])
 
     # Combine the chatbot response, the predetermined word list, and the response's score
-    chatbot_response = f"Chatbot: {response.response.strip()}"  # Prefix with "Chatbot:"
+    chatbot_response = modified_chatbot_response(response.response.strip())  # Prefix with "Chatbot:" and format as dot points
     predetermined_word_status = word_list
     percentage_found_text = f"{percentage_found:.2f}%"
 
@@ -172,6 +186,6 @@ def chatbot(input_text):
     response = index.query(input_text, response_mode="compact")
     
     # Return the chatbot's response
-    chatbot_response = f"Chatbot: {response.response.strip()}"  # Prefix with "Chatbot:"
+    chatbot_response = modified_chatbot_response(response.response.strip())  # Prefix with "Chatbot:" and format as dot points
     
     return chatbot_response, "", 0.0, chatbot_response
