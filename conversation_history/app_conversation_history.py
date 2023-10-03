@@ -1,3 +1,24 @@
+# Check for relevance
+relevant_keywords = [
+    'cyber', 'incident', 'response', 'threat', 'security', 'attack', 'DDOS', 'DOS', 'phishing', 'ransomware', 'malware',
+    'breach', 'compromise', 'firewall', 'insider', 'honeypot', 'network', 'monitoring', 'backup', 'recovery', 'encryption',
+    'virus', 'worm', 'trojan', 'spyware', 'adware', 'rootkit', 'keylogger', 'antivirus', 'clean', 'sensitive', 'data', 'leak',
+    'sanitization', 'privacy', 'loss', 'prevention', 'insurance', 'authentication', 'password', 'hashing', 'two-factor', 'multi-factor',
+    'intrusion', 'detection', 'system', 'IDS', 'IPS', 'intrusion', 'prevention', 'VPN', 'virtual', 'private', 'network', 'protocol',
+    'TCP', 'IP', 'UDP', 'router', 'switch', 'port', 'scan', 'brute', 'force', 'credential', 'stuffing', 'botnet', 'C&C', 'command',
+    'control', 'exploit', 'vulnerability', 'patch', 'update', 'secure', 'shell', 'SSH', 'telnet', 'FTP', 'HTTP', 'HTTPS', 'SSL', 'TLS',
+    'certificate', 'public', 'key', 'private', 'digital', 'signature', 'PKI', 'infrastructure', 'zero-day', 'payload', 'session', 'hijacking',
+    'spoofing', 'ARP', 'address', 'resolution', 'MITM', 'man-in-the-middle', 'DNS', 'domain', 'name', 'server', 'resolver', 'cache', 'poisoning',
+    'drive-by', 'download', 'clickjacking', 'CSRF', 'cross-site', 'request', 'forgery', 'XSS', 'cross-site', 'scripting', 'SQL', 'injection',
+    'OSI', 'model', 'layer', 'endpoint', 'protection', 'EPP', 'EDR', 'endpoint', 'detection', 'response', 'SOC', 'operations', 'center', 'SIEM',
+    'management', 'information', 'event', 'APT', 'advanced', 'persistent', 'threat', 'IoT', 'internet', 'things', 'cloud', 'SaaS', 'PaaS', 'IaaS',
+    'virtualization', 'hypervisor', 'container', 'Docker', 'Kubernetes', 'orchestration', 'API', 'application', 'programming', 'interface', 'SDK',
+    'software', 'development', 'kit', 'proxy', 'reverse', 'gateway', 'DMZ', 'demilitarized', 'zone', 'NAT', 'address', 'translation', 'penetration',
+    'testing', 'pentest', 'red', 'team', 'blue', 'purple', 'CISO', 'chief', 'information', 'officer', 'CIO', 'IT', 'technology', 'LAN', 'WAN', 'MAN',
+    'local', 'area', 'network', 'wide', 'metropolitan', 'MAC', 'media', 'access', 'control', 'VPN', 'tunnel', 'split', 'tunneling', 'full', 'cryptography',
+    'algorithm', 'symmetric', 'asymmetric', 'RSA', 'AES', 'DES', '3DES', 'block', 'cipher', 'stream', 'PGP', 'pretty', 'good', 'privacy'
+]
+
 from gpt_index import SimpleDirectoryReader, GPTSimpleVectorIndex, LLMPredictor, PromptHelper
 from langchain import OpenAI
 import gradio as gr
@@ -6,7 +27,7 @@ import os
 ####################################################################################
 
 # Insert OpenAI API key found on the website
-os.environ["OPENAI_API_KEY"] = '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'
+os.environ["OPENAI_API_KEY"] = ''
 
 ####################################################################################
 
@@ -62,7 +83,13 @@ chat_history = []
 identified_words = set()
 
 # Creating the chatbot function
+
 def chatbot(input_text, selected_word_set):
+    # Check for relevance
+    if not any(keyword.lower() in input_text.lower() for keyword in relevant_keywords):
+        return "This question is not relevant to the context", "", 0.0, "This question is not relevant to the context"
+        
+    # If relevant, continue with the existing mechanism
     predetermined_words = predetermined_word_sets.get(selected_word_set, [])
 
     index = GPTSimpleVectorIndex.load_from_disk('index.json')
@@ -86,10 +113,10 @@ def chatbot(input_text, selected_word_set):
     # Create the list of predetermined words selected
     word_list = "\n".join([f"{word} {'✅' if word in identified_words else '❌'}" for word in predetermined_words])
 
-    # Combine the chatbot response, the predetermined word list, and the responses score
+    # Combine the chatbot response, the predetermined word list, and the response's score
     chatbot_response = f"Chatbot: {response.response.strip()}"  # Prefix with "Chatbot:"
     predetermined_word_status = word_list
-    percentage_found_text = f"Percentage Found: {percentage_found:.2f}%"
+    percentage_found_text = f"{percentage_found:.2f}%"
 
     # Append the chatbot's response to the chat history and remove extra lines
     chat_history.append(chatbot_response)
@@ -98,7 +125,7 @@ def chatbot(input_text, selected_word_set):
     # Create a conversation display with a one-line gap between initial conversation and subsequent conversation
     conversation_display = "\n".join(chat_history[:2]) + "\n\n" + "\n".join(chat_history[2:])
 
-    return chatbot_response, predetermined_word_status, percentage_found_text, conversation_display
+    return chatbot_response, predetermined_word_status, percentage_found_text, conversation_display, percentage_found_text, conversation_display
 
 
 ####################################################################################
@@ -129,3 +156,22 @@ interface1 = gr.Interface(
 selected_word_set = list(document_folders.keys())[0]  # Default to the first set
 index = construct_index(selected_word_set)
 interface1.launch(share=True)
+
+
+relevant_keywords = ['cyber', 'incident', 'response', 'threat', 'security', 'attack', 'DDOS', 'DOS', 'phishing', 'ransomware']
+
+def chatbot(input_text):
+    # Check for relevance
+    if not any(keyword.lower() in input_text.lower() for keyword in relevant_keywords):
+        return "This question is not relevant to the context", "", 0.0, "This question is not relevant to the context"
+        
+    # If relevant, continue with the existing mechanism
+    index = GPTSimpleVectorIndex.load_from_disk('index.json')
+    
+    # Generate a response based on the input_text
+    response = index.query(input_text, response_mode="compact")
+    
+    # Return the chatbot's response
+    chatbot_response = f"Chatbot: {response.response.strip()}"  # Prefix with "Chatbot:"
+    
+    return chatbot_response, "", 0.0, chatbot_response
