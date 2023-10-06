@@ -27,7 +27,7 @@ import os
 ####################################################################################
 
 # Insert OpenAI API key found on the website
-os.environ["OPENAI_API_KEY"] = ''
+os.environ["OPENAI_API_KEY"] = '' #Insert key
 
 ####################################################################################
 
@@ -147,6 +147,7 @@ def chatbot(input_text, selected_word_set):
 # Create a Gradio interface with a Textbox for input and a Radio input for selecting word sets
 interface1 = gr.Interface(
     fn=chatbot,
+    allow_flagging="never",
     inputs=[
         gr.inputs.Textbox(lines=5, label="Chat with the AI"),
         gr.inputs.Radio(

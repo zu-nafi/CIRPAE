@@ -1,0 +1,14 @@
+Chat with the AI,Select Predetermined Word Set,Chatbot Response,Scenario Analysis,Score (%),Conversation History,flag,username,timestamp
+What is data breach,Data breach,"• A data breach is an incident where sensitive, confidential, or protected data has been accessed, viewed, stolen, or used by an unauthorized individual
+• It can occur when data is transferred over an insecure network, stored on an unsecured device, or accessed by an unauthorized user","sensitive ✅
+data ✅
+leak ❌
+sanitization ❌
+privacy ❌
+loss prevention ❌
+insurance ❌
+two-factor authentication ❌",25.00%,"User: What is data breach
+• A data breach is an incident where sensitive, confidential, or protected data has been accessed, viewed, stolen, or used by an unauthorized individual
+• It can occur when data is transferred over an insecure network, stored on an unsecured device, or accessed by an unauthorized user
+
+",,,2023-10-06 18:02:39.179549
